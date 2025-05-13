@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Kalkulator Harga Tiket Optimal</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 500px;
+      margin: 30px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    h2 {
+      text-align: center;
+    }
+    label, input {
+      display: block;
+      margin: 10px 0;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 8px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>Kalkulator Harga Tiket Optimal</h2>
+
+  <label for="economy">Harga Otomatis (Ekonomi):</label>
+  <input type="number" id="economy" placeholder="Contoh: 829">
+
+  <label for="business">Harga Otomatis (Bisnis):</label>
+  <input type="number" id="business" placeholder="Contoh: 1627">
+
+  <label for="first">Harga Otomatis (First Class):</label>
+  <input type="number" id="first" placeholder="Contoh: 24777">
+
+  <button onclick="calculate()">Hitung Harga Optimal</button>
+
+  <div class="result" id="result"></div>
+
+  <script>
+    function calculate() {
+      const eco = Math.floor(document.getElementById("economy").value * 1.1);
+      const bus = Math.floor(document.getElementById("business").value * 1.08);
+      const fst = Math.floor(document.getElementById("first").value * 1.06);
+
+      document.getElementById("result").innerHTML = `
+        ✅ Harga Ekonomi Optimal: $${isNaN(eco) ? '-' : eco}<br>
+        ✅ Harga Bisnis Optimal: $${isNaN(bus) ? '-' : bus}<br>
+        ✅ Harga First Class Optimal: $${isNaN(fst) ? '-' : fst}
+      `;
+    }
+  </script>
+</body>
+</html>
