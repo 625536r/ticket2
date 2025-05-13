@@ -2,26 +2,33 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Kalkulator Harga Tiket Optimal</title>
+  <title>Kalkulator Penetapan Harga</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      max-width: 500px;
+      max-width: 600px;
       margin: 30px auto;
       padding: 20px;
       border: 1px solid #ccc;
       border-radius: 8px;
+      background-color: #f9f9f9;
     }
     h2 {
       text-align: center;
     }
-    label, input {
+    section {
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #ccc;
+    }
+    label, input, select {
       display: block;
       margin: 10px 0;
     }
-    input[type="number"] {
+    input[type="number"], select {
       width: 100%;
       padding: 8px;
+      box-sizing: border-box;
     }
     button {
       width: 100%;
@@ -35,37 +42,90 @@
     .result {
       margin-top: 20px;
       font-weight: bold;
+      background-color: #fff;
+      padding: 10px;
+      border-radius: 6px;
     }
   </style>
 </head>
 <body>
-  <h2>Kalkulator Harga Tiket Optimal</h2>
 
-  <label for="economy">Harga Otomatis (Ekonomi):</label>
-  <input type="number" id="economy" placeholder="Contoh: 829">
+  <h2>Kalkulator Penetapan Harga</h2>
 
-  <label for="business">Harga Otomatis (Bisnis):</label>
-  <input type="number" id="business" placeholder="Contoh: 1627">
+  <!-- Kalkulator Harga Kargo -->
+  <section>
+    <h3>1. Kalkulator Harga Kargo</h3>
 
-  <label for="first">Harga Otomatis (First Class):</label>
-  <input type="number" id="first" placeholder="Contoh: 24777">
+    <label>Jenis Kargo:</label>
+    <select id="cargoType">
+      <option value="large">Large (x1.08)</option>
+      <option value="heavy">Heavy (x1.06)</option>
+    </select>
 
-  <button onclick="calculate()">Hitung Harga Optimal</button>
+    <label>Harga Dasar per Unit (USD):</label>
+    <input type="number" id="basePrice" placeholder="Contoh: 200">
 
-  <div class="result" id="result"></div>
+    <button onclick="hitungHargaKargo()">Hitung Harga Final Kargo</button>
+
+    <div class="result" id="hasilKargo"></div>
+  </section>
+
+  <!-- Kalkulator Harga Tiket Optimal -->
+  <section>
+    <h3>2. Kalkulator Harga Tiket Optimal (Pax)</h3>
+
+    <label for="economy">Harga Otomatis (Ekonomi):</label>
+    <input type="number" id="economy" placeholder="Contoh: 829">
+
+    <label for="business">Harga Otomatis (Bisnis):</label>
+    <input type="number" id="business" placeholder="Contoh: 1627">
+
+    <label for="first">Harga Otomatis (First Class):</label>
+    <input type="number" id="first" placeholder="Contoh: 24777">
+
+    <button onclick="hitungHargaTiket()">Hitung Harga Optimal Tiket</button>
+
+    <div class="result" id="hasilTiket"></div>
+  </section>
 
   <script>
-    function calculate() {
-      const eco = Math.floor(document.getElementById("economy").value * 1.1);
-      const bus = Math.floor(document.getElementById("business").value * 1.08);
-      const fst = Math.floor(document.getElementById("first").value * 1.06);
+    // Kalkulator Harga Kargo
+    function hitungHargaKargo() {
+      const type = document.getElementById("cargoType").value;
+      const basePrice = parseFloat(document.getElementById("basePrice").value);
+      const multiplier = type === "large" ? 1.08 : 1.06;
 
-      document.getElementById("result").innerHTML = `
-        ✅ Harga Ekonomi Optimal: $${isNaN(eco) ? '-' : eco}<br>
-        ✅ Harga Bisnis Optimal: $${isNaN(bus) ? '-' : bus}<br>
-        ✅ Harga First Class Optimal: $${isNaN(fst) ? '-' : fst}
-      `;
+      if (isNaN(basePrice) || basePrice <= 0) {
+        document.getElementById("hasilKargo").innerText = "Masukkan harga dasar yang valid.";
+        return;
+      }
+
+      const finalPrice = basePrice * multiplier;
+
+      document.getElementById("hasilKargo").innerHTML = `
+        Jenis Kargo: <b>${type.toUpperCase()}</b><br>
+        Harga Dasar: <b>$${basePrice.toFixed(2)}</b><br>
+        Multiplier: <b>x${multiplier}</b><br>
+        <hr>
+        <span style="color: green;">Harga Final per Unit: <b>$${finalPrice.toFixed(2)}</b></span>`;
+    }
+
+    // Kalkulator Harga Tiket Optimal
+    function hitungHargaTiket() {
+      const eco = parseFloat(document.getElementById("economy").value);
+      const bus = parseFloat(document.getElementById("business").value);
+      const fst = parseFloat(document.getElementById("first").value);
+
+      const ecoResult = !isNaN(eco) ? `$${Math.floor(eco * 1.1)}` : '-';
+      const busResult = !isNaN(bus) ? `$${Math.floor(bus * 1.08)}` : '-';
+      const fstResult = !isNaN(fst) ? `$${Math.floor(fst * 1.06)}` : '-';
+
+      document.getElementById("hasilTiket").innerHTML = `
+        ✅ Harga Ekonomi Optimal: ${ecoResult}<br>
+        ✅ Harga Bisnis Optimal: ${busResult}<br>
+        ✅ Harga First Class Optimal: ${fstResult}`;
     }
   </script>
+
 </body>
 </html>
